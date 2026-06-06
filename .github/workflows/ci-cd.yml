@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: '8.0'
 
-   
+ 
     - name: Restaurar e Compilar a API C#
       run: |
         dotnet restore **/*.csproj
@@ -30,8 +30,8 @@ jobs:
    
     - name: Build da Imagem Docker
       run: |
-        DOCKER_DIR=$(dirname $(find . -name Dockerfile | head -n 1))
-        docker build -t minha-api-cloud:test $DOCKER_DIR
+        cd MinhaApiCloud
+        docker build -t minha-api-cloud:test .
 
    
     - name: Criar Cluster Local Kubernetes (Kind)
@@ -44,7 +44,7 @@ jobs:
       run: |
         kind load docker-image minha-api-cloud:test --name kind-cluster
 
-  
+   
     - name: Ajustar Imagem no Manifesto K8s
       run: |
         MANIFEST_PATH=$(find . -name deployment.yaml | head -n 1)
