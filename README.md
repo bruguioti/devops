@@ -1,12 +1,12 @@
 
 
-```markdown
-#  Enterprise Cloud Architecture: C# WebAPI + Kubernetes CI/CD Pipeline
+
+##  Enterprise Cloud Architecture: C# WebAPI + Kubernetes CI/CD Pipeline
 
 Este projeto foi desenvolvido com o objetivo de desenhar e implementar um ecossistema completo de desenvolvimento e operações (DevOps). Ele simula um ambiente de produção moderno, utilizando uma API em **C# (.NET 8)** containerizada com **Docker**, orquestrada via **Kubernetes** e totalmente automatizada com **GitHub Actions**.
 
 
-##  Tecnologias e Ferramentas Utilizadas
+###  Tecnologias e Ferramentas Utilizadas
 
 * **Backend:** C# (.NET 8) WebAPI
 * **Containerização:** Docker & Dockerfile multi-stage (otimização de imagem)
