@@ -15,22 +15,22 @@ jobs:
     - name: Checkout do Código
       uses: actions/checkout@v4
 
-    
+   
     - name: Configurar .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0'
 
-    
+   
     - name: Restaurar e Compilar a API C#
       run: |
-        dotnet restore MinhaApiCloud/MinhaApiCloud.csproj
-        dotnet build MinhaApiCloud/MinhaApiCloud.csproj --configuration Release
+        dotnet restore MinhaApiCoud/MinhaApiCloud.csproj
+        dotnet build MinhaApiCoud/MinhaApiCloud.csproj --configuration Release
 
-   
+    
     - name: Build da Imagem Docker
       run: |
-        docker build -t minha-api-cloud:test ./MinhaApiCloud
+        docker build -t minha-api-cloud:test ./MinhaApiCoud
 
     
     - name: Criar Cluster Local Kubernetes (Kind)
@@ -38,21 +38,20 @@ jobs:
       with:
         cluster_name: kind-cluster
 
-    
+   
     - name: Carregar Imagem Docker no Kubernetes
       run: |
         kind load docker-image minha-api-cloud:test --name kind-cluster
 
-
+   
     - name: Ajustar Imagem no Manifesto K8s
       run: |
-        sed -i 's|<SEU_AZURE_REGISTRY>.azurecr.io/minha-api-cloud:v1|minha-api-cloud:test|g' k8s/deployment.yaml
+        sed -i 's|<SEU_AZURE_REGISTRY>.azurecr.io/minha-api-cloud:v1|minha-api-cloud:test|g' K8s/deployment.yaml
 
-   
     - name: Deploy e Validação no Kubernetes
       run: |
-        kubectl apply -f k8s/deployment.yaml
-        kubectl apply -f k8s/service.yaml
+        kubectl apply -f K8s/deployment.yaml
+        kubectl apply -f K8s/service.yaml
         
         echo "Aguardando os Pods ficarem prontos..."
         kubectl rollout status deployment/minha-api-deployment --timeout=90s
