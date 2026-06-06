@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
+   
     - name: Checkout do Código
       uses: actions/checkout@v4
 
-   
+    
     - name: Configurar .NET SDK
       uses: actions/setup-dotnet@v4
       with:
@@ -24,17 +24,17 @@ jobs:
     
     - name: Restaurar e Compilar a API C#
       run: |
-        dotnet restore ApiCloud/ApiCloud.csproj
-        dotnet build ApiCloud/ApiCloud.csproj --configuration Release
-
-  
-    - name: Build da Imagem Docker
-      run: |
-        docker build -t minha-api-cloud:test ./ApiCloud
+        dotnet restore MinhaApiCloud/MinhaApiCloud.csproj
+        dotnet build MinhaApiCloud/MinhaApiCloud.csproj --configuration Release
 
    
+    - name: Build da Imagem Docker
+      run: |
+        docker build -t minha-api-cloud:test ./MinhaApiCloud
+
+    
     - name: Criar Cluster Local Kubernetes (Kind)
-      uses: helm/kind-action@v1.10.0
+      uses: helm/kind-action@v1.14.0
       with:
         cluster_name: kind-cluster
 
@@ -43,11 +43,12 @@ jobs:
       run: |
         kind load docker-image minha-api-cloud:test --name kind-cluster
 
-   
+
     - name: Ajustar Imagem no Manifesto K8s
       run: |
         sed -i 's|<SEU_AZURE_REGISTRY>.azurecr.io/minha-api-cloud:v1|minha-api-cloud:test|g' k8s/deployment.yaml
 
+   
     - name: Deploy e Validação no Kubernetes
       run: |
         kubectl apply -f k8s/deployment.yaml
