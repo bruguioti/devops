@@ -22,6 +22,7 @@ jobs:
         dotnet-version: '8.0'
 
    
+    - name: Restaurar e Compilar a API C#
       run: |
         dotnet restore **/*.csproj
         dotnet build **/*.csproj --configuration Release
@@ -29,8 +30,8 @@ jobs:
    
     - name: Build da Imagem Docker
       run: |
-        cd MinhaApiCoud
-        docker build -t minha-api-cloud:test .
+        DOCKER_DIR=$(dirname $(find . -name Dockerfile | head -n 1))
+        docker build -t minha-api-cloud:test $DOCKER_DIR
 
    
     - name: Criar Cluster Local Kubernetes (Kind)
@@ -43,16 +44,17 @@ jobs:
       run: |
         kind load docker-image minha-api-cloud:test --name kind-cluster
 
-   
+  
     - name: Ajustar Imagem no Manifesto K8s
       run: |
-        sed -i 's|<SEU_AZURE_REGISTRY>.azurecr.io/minha-api-cloud:v1|minha-api-cloud:test|g' K8s/deployment.yaml
+        MANIFEST_PATH=$(find . -name deployment.yaml | head -n 1)
+        sed -i 's|<SEU_AZURE_REGISTRY>.azurecr.io/minha-api-cloud:v1|minha-api-cloud:test|g' $MANIFEST_PATH
 
-    
+   
     - name: Deploy e Validação no Kubernetes
       run: |
-        kubectl apply -f K8s/deployment.yaml
-        kubectl apply -f K8s/service.yaml
+        K8S_DIR=$(dirname $(find . -name deployment.yaml | head -n 1))
+        kubectl apply -f $K8S_DIR/
         
         echo "Aguardando os Pods ficarem prontos..."
         kubectl rollout status deployment/minha-api-deployment --timeout=90s
