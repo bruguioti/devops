@@ -1,10 +1,10 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["ApiCloud.csproj", "./"]
-RUN dotnet restore "./ApiCloud.csproj"
+COPY ["MinhaApiCloud.csproj", "./"]
+RUN dotnet restore "./MinhaApiCloud.csproj"
 COPY . .
-RUN dotnet publish "ApiCloud.csproj" -c Release -o /app/publish
+RUN dotnet publish "MinhaApiCloud.csproj" -c Release -o /app/publish
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
